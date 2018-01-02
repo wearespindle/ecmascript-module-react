@@ -58,7 +58,7 @@ function makeImportsAbsolute({ file, basePath, blackList, url }) {
         });
       }
     }
-    console.log(file);
+    // console.log(file);
 
     return Promise.resolve(file);
   });

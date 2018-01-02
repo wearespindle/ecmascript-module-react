@@ -8,13 +8,7 @@ const files = {};
 const unresolved = {};
 
 module.exports = async function getFileList({ filePath, basePath }) {
-  let resolvedPath;
-
-  if (Array.isArray(filePath)) {
-    resolvedPath = require.resolve(path.resolve(basePath, filePath[0]));
-  } else {
-    resolvedPath = require.resolve(path.resolve(basePath, filePath));
-  }
+  const resolvedPath = require.resolve(path.resolve(basePath, filePath));
   const dir = path.dirname(resolvedPath);
 
   files[resolvedPath] = undefined;
