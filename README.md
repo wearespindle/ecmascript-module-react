@@ -14,3 +14,4 @@ Steps that are currently done:
 * transform CommonJS modules to Native Ecmascript modules (fbjs, prop-types and practically all index.js files)
 * make proxy module for Object.assign which exports an assign variable
 * make global variables ```window.process``` and ```window.__DEV__```
+* export the properties of the React object as named exports and the React object as default
