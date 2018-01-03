@@ -6,7 +6,7 @@ The goal is to have an automated process which takes the source from the origina
 
 
 Steps that are currently done:
-* based on the urls that are passed in as CLI arguments find out what modules are all ```import``ed or ```require```d
+* based on the urls that are passed in as CLI arguments find out what modules are all ```import```ed or ```require```d
 * remove flow hints
 * copy all files to an output folder
 * make all imports paths absolute
