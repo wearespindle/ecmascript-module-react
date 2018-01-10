@@ -1,4 +1,4 @@
-const { resolve, dirname, basename, join } = require('path');
+const { resolve, dirname, basename, join, sep } = require('path');
 
 module.exports = function resolveRequire({ file, dir, basePath }) {
   let resolved;

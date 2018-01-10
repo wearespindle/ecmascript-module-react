@@ -12,15 +12,15 @@
  * that support it.
  */
 
-import lowPriorityWarning from 'shared/lowPriorityWarning';
-import describeComponentFrame from 'shared/describeComponentFrame';
-import getComponentName from 'shared/getComponentName';
-import {getIteratorFn, REACT_FRAGMENT_TYPE} from 'shared/ReactSymbols';
+import lowPriorityWarning from '../../shared/lowPriorityWarning';
+import describeComponentFrame from '../../shared/describeComponentFrame';
+import getComponentName from '../../shared/getComponentName';
+import { getIteratorFn, REACT_FRAGMENT_TYPE } from '../../shared/ReactSymbols';
 import checkPropTypes from 'prop-types/checkPropTypes';
 import warning from 'fbjs/lib/warning';
 
 import ReactCurrentOwner from './ReactCurrentOwner';
-import {isValidElement, createElement, cloneElement} from './ReactElement';
+import { isValidElement, createElement, cloneElement } from './ReactElement';
 import ReactDebugCurrentFrame from './ReactDebugCurrentFrame';
 
 let currentlyValidatingElement;
@@ -58,7 +58,7 @@ if (__DEV__) {
       stack += describeComponentFrame(
         name,
         currentlyValidatingElement._source,
-        owner && getComponentName(owner),
+        owner && getComponentName(owner)
       );
     }
     stack += ReactDebugCurrentFrame.getStackAddendum() || '';
@@ -79,11 +79,7 @@ function getDeclarationErrorAddendum() {
 }
 
 function getSourceInfoErrorAddendum(elementProps) {
-  if (
-    elementProps !== null &&
-    elementProps !== undefined &&
-    elementProps.__source !== undefined
-  ) {
+  if (elementProps !== null && elementProps !== undefined && elementProps.__source !== undefined) {
     const source = elementProps.__source;
     const fileName = source.fileName.replace(/^.*[\\\/]/, '');
     const lineNumber = source.lineNumber;
@@ -104,9 +100,7 @@ function getCurrentComponentErrorInfo(parentType) {
 
   if (!info) {
     const parentName =
-      typeof parentType === 'string'
-        ? parentType
-        : parentType.displayName || parentType.name;
+      typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
     if (parentName) {
       info = `\n\nCheck the top-level render call using <${parentName}>.`;
     }
@@ -141,15 +135,9 @@ function validateExplicitKey(element, parentType) {
   // property, it may be the creator of the child that's responsible for
   // assigning it a key.
   let childOwner = '';
-  if (
-    element &&
-    element._owner &&
-    element._owner !== ReactCurrentOwner.current
-  ) {
+  if (element && element._owner && element._owner !== ReactCurrentOwner.current) {
     // Give the component that originally created this child.
-    childOwner = ` It was passed a child from ${getComponentName(
-      element._owner,
-    )}.`;
+    childOwner = ` It was passed a child from ${getComponentName(element._owner)}.`;
   }
 
   currentlyValidatingElement = element;
@@ -160,7 +148,7 @@ function validateExplicitKey(element, parentType) {
         '%s%s See https://fb.me/react-warning-keys for more information.%s',
       currentComponentErrorInfo,
       childOwner,
-      getStackAddendum(),
+      getStackAddendum()
     );
   }
   currentlyValidatingElement = null;
@@ -226,22 +214,19 @@ function validatePropTypes(element) {
     currentlyValidatingElement = element;
     checkPropTypes(propTypes, element.props, 'prop', name, getStackAddendum);
     currentlyValidatingElement = null;
-  } else if (
-    componentClass.PropTypes !== undefined &&
-    !propTypesMisspellWarningShown
-  ) {
+  } else if (componentClass.PropTypes !== undefined && !propTypesMisspellWarningShown) {
     propTypesMisspellWarningShown = true;
     warning(
       false,
       'Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?',
-      name || 'Unknown',
+      name || 'Unknown'
     );
   }
   if (typeof componentClass.getDefaultProps === 'function') {
     warning(
       componentClass.getDefaultProps.isReactClassApproved,
       'getDefaultProps is only used on classic React.createClass ' +
-        'definitions. Use a static property named `defaultProps` instead.',
+        'definitions. Use a static property named `defaultProps` instead.'
     );
   }
 }
@@ -260,18 +245,14 @@ function validateFragmentProps(fragment) {
         'Invalid prop `%s` supplied to `React.Fragment`. ' +
           'React.Fragment can only have `key` and `children` props.%s',
         key,
-        getStackAddendum(),
+        getStackAddendum()
       );
       break;
     }
   }
 
   if (fragment.ref !== null) {
-    warning(
-      false,
-      'Invalid attribute `ref` supplied to `React.Fragment`.%s',
-      getStackAddendum(),
-    );
+    warning(false, 'Invalid attribute `ref` supplied to `React.Fragment`.%s', getStackAddendum());
   }
 
   currentlyValidatingElement = null;
@@ -290,9 +271,7 @@ export function createElementWithValidation(type, props, children) {
     let info = '';
     if (
       type === undefined ||
-      (typeof type === 'object' &&
-        type !== null &&
-        Object.keys(type).length === 0)
+      (typeof type === 'object' && type !== null && Object.keys(type).length === 0)
     ) {
       info +=
         ' You likely forgot to export your component from the file ' +
@@ -314,7 +293,7 @@ export function createElementWithValidation(type, props, children) {
         'built-in components) or a class/function (for composite ' +
         'components) but got: %s.%s',
       type == null ? type : typeof type,
-      info,
+      info
     );
   }
 
@@ -358,13 +337,13 @@ export function createFactoryWithValidation(type) {
         lowPriorityWarning(
           false,
           'Factory.type is deprecated. Access the class directly ' +
-            'before passing it to createFactory.',
+            'before passing it to createFactory.'
         );
         Object.defineProperty(this, 'type', {
-          value: type,
+          value: type
         });
         return type;
-      },
+      }
     });
   }
 

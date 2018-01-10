@@ -6,8 +6,8 @@
  */
 
 import assign from 'object-assign';
-import ReactVersion from 'shared/ReactVersion';
-import { REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
+import ReactVersion from '../../shared/ReactVersion';
+import { REACT_FRAGMENT_TYPE } from '../../shared/ReactSymbols';
 
 import { Component, PureComponent, AsyncComponent } from './ReactBaseClasses';
 import { forEach, map, count, toArray, only } from './ReactChildren';
@@ -45,9 +45,7 @@ const React = {
   version: ReactVersion,
 
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: {
-    ReactCurrentOwner,
-    // Used by renderers to avoid bundling object-assign twice in UMD bundles:
-    assign
+    ReactCurrentOwner
   }
 };
 

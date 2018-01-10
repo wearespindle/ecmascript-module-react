@@ -4,7 +4,7 @@ const getFileContent = require('./getFileContent');
 const writeFileContent = require('./writeFileContent');
 const parseFile = require('./parseFile');
 const resolveRequire = require('./resolveRequire');
-const flowRemoveTypes = require('flow-remove-types');
+// const { generate } = require('astring');
 
 function absoluterise({ file, basePath, dir }) {
   const resolved = resolveRequire({
@@ -23,42 +23,49 @@ function makeImportsAbsolute({ file, basePath, blackList, url }) {
     const parsedFile = parseFile(content);
     const dir = dirname(file).replace(`${basePath}${sep}`, '');
     const { body } = parsedFile;
+
     let modified = false;
 
-    if (body) {
-      escodegen.attachComments(parsedFile, parsedFile.comments, parsedFile.tokens);
+    try {
+      if (body) {
+        escodegen.attachComments(parsedFile, parsedFile.comments, parsedFile.tokens);
 
-      body.forEach((l, index) => {
-        if ('ImportDeclaration' === l.type || 'ExportAllDeclaration' === l.type) {
-          const { value } = l.source;
-          if (!(value in blackList)) {
-            l.source.value = absoluterise({ file: value, basePath, dir }).replace(basePath, url);
-            modified = true;
-          } else {
-            console.log(
-              `not making import statement for '${l.source.value}' absolute since it is blacklisted`
-            );
+        body.forEach((l, index) => {
+          if ('ImportDeclaration' === l.type || 'ExportAllDeclaration' === l.type) {
+            const { value } = l.source;
+            if (!(value in blackList)) {
+              l.source.value = absoluterise({ file: value, basePath, dir }).replace(basePath, url);
+              modified = true;
+            } else {
+              console.log(
+                `not making import statement for '${
+                  l.source.value
+                }' absolute since it is blacklisted`
+              );
+            }
           }
+        });
+
+        if (modified) {
+          const generated = escodegen.generate(parsedFile, {
+            format: {
+              preserveBlankLines: true,
+              compact: false
+            },
+            comment: true,
+            sourceCode: content
+          });
+
+          return writeFileContent({
+            file,
+            data: generated
+          });
         }
-      });
-
-      if (modified) {
-        const generated = escodegen.generate(parsedFile, {
-          format: {
-            preserveBlankLines: true,
-            compact: false
-          },
-          comment: true,
-          sourceCode: content
-        });
-
-        return writeFileContent({
-          file,
-          data: generated
-        });
       }
+    } catch (e) {
+      console.log(file);
+      console.log(e.message);
     }
-    // console.log(file);
 
     return Promise.resolve(file);
   });

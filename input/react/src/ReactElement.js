@@ -6,7 +6,7 @@
  */
 
 import warning from 'fbjs/lib/warning';
-import {REACT_ELEMENT_TYPE} from 'shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE } from '../../shared/ReactSymbols';
 
 import ReactCurrentOwner from './ReactCurrentOwner';
 
@@ -16,7 +16,7 @@ const RESERVED_PROPS = {
   key: true,
   ref: true,
   __self: true,
-  __source: true,
+  __source: true
 };
 
 let specialPropKeyWarningShown, specialPropRefWarningShown;
@@ -55,14 +55,14 @@ function defineKeyPropWarningGetter(props, displayName) {
           'in `undefined` being returned. If you need to access the same ' +
           'value within the child component, you should pass it as a different ' +
           'prop. (https://fb.me/react-special-props)',
-        displayName,
+        displayName
       );
     }
   };
   warnAboutAccessingKey.isReactWarning = true;
   Object.defineProperty(props, 'key', {
     get: warnAboutAccessingKey,
-    configurable: true,
+    configurable: true
   });
 }
 
@@ -76,14 +76,14 @@ function defineRefPropWarningGetter(props, displayName) {
           'in `undefined` being returned. If you need to access the same ' +
           'value within the child component, you should pass it as a different ' +
           'prop. (https://fb.me/react-special-props)',
-        displayName,
+        displayName
       );
     }
   };
   warnAboutAccessingRef.isReactWarning = true;
   Object.defineProperty(props, 'ref', {
     get: warnAboutAccessingRef,
-    configurable: true,
+    configurable: true
   });
 }
 
@@ -119,7 +119,7 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
     props: props,
 
     // Record the component responsible for creating this element.
-    _owner: owner,
+    _owner: owner
   };
 
   if (__DEV__) {
@@ -137,14 +137,14 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
       configurable: false,
       enumerable: false,
       writable: true,
-      value: false,
+      value: false
     });
     // self and source are DEV only properties.
     Object.defineProperty(element, '_self', {
       configurable: false,
       enumerable: false,
       writable: false,
-      value: self,
+      value: self
     });
     // Two elements created in two different places should be considered
     // equal for testing purposes and therefore we hide it from enumeration.
@@ -152,7 +152,7 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
       configurable: false,
       enumerable: false,
       writable: false,
-      value: source,
+      value: source
     });
     if (Object.freeze) {
       Object.freeze(element.props);
@@ -190,10 +190,7 @@ export function createElement(type, config, children) {
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
     for (propName in config) {
-      if (
-        hasOwnProperty.call(config, propName) &&
-        !RESERVED_PROPS.hasOwnProperty(propName)
-      ) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
         props[propName] = config[propName];
       }
     }
@@ -228,14 +225,9 @@ export function createElement(type, config, children) {
   }
   if (__DEV__) {
     if (key || ref) {
-      if (
-        typeof props.$$typeof === 'undefined' ||
-        props.$$typeof !== REACT_ELEMENT_TYPE
-      ) {
+      if (typeof props.$$typeof === 'undefined' || props.$$typeof !== REACT_ELEMENT_TYPE) {
         const displayName =
-          typeof type === 'function'
-            ? type.displayName || type.name || 'Unknown'
-            : type;
+          typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
         if (key) {
           defineKeyPropWarningGetter(props, displayName);
         }
@@ -245,15 +237,7 @@ export function createElement(type, config, children) {
       }
     }
   }
-  return ReactElement(
-    type,
-    key,
-    ref,
-    self,
-    source,
-    ReactCurrentOwner.current,
-    props,
-  );
+  return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
 }
 
 /**
@@ -279,7 +263,7 @@ export function cloneAndReplaceKey(oldElement, newKey) {
     oldElement._self,
     oldElement._source,
     oldElement._owner,
-    oldElement.props,
+    oldElement.props
   );
 
   return newElement;
@@ -293,7 +277,8 @@ export function cloneElement(element, config, children) {
   let propName;
 
   // Original props are copied
-  const props = Object.assign({}, element.props);
+  const props = {}; //{ ...element.props };
+  // const props = Object.assign({}, element.props );
 
   // Reserved names are extracted
   let key = element.key;
@@ -324,10 +309,7 @@ export function cloneElement(element, config, children) {
       defaultProps = element.type.defaultProps;
     }
     for (propName in config) {
-      if (
-        hasOwnProperty.call(config, propName) &&
-        !RESERVED_PROPS.hasOwnProperty(propName)
-      ) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
         if (config[propName] === undefined && defaultProps !== undefined) {
           // Resolve default props
           props[propName] = defaultProps[propName];
@@ -362,9 +344,5 @@ export function cloneElement(element, config, children) {
  * @final
  */
 export function isValidElement(object) {
-  return (
-    typeof object === 'object' &&
-    object !== null &&
-    object.$$typeof === REACT_ELEMENT_TYPE
-  );
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
 }

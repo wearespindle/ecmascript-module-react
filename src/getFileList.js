@@ -14,7 +14,7 @@ module.exports = async function getFileList({ filePath, basePath }) {
   files[resolvedPath] = undefined;
 
   const requires = await getFileContent(resolvedPath)
-    .then(parseFile)
+    .then(p => parseFile(p, resolvedPath))
     .then(file => {
       if (Object.keys(file).length === 0) {
         console.log(filePath);

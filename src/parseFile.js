@@ -1,24 +1,46 @@
-const esprima = require('esprima');
+const acorn = require('acorn');
+const acornInjector1 = require('acorn-jsx/inject');
+const acornInjector2 = require('acorn-object-rest-spread/inject');
+acornInjector1(acorn);
+acornInjector2(acorn);
 
-const settings = {
-  range: true,
-  loc: true,
-  tolerant: true,
+const acornSettings = {
+  ranges: true,
+  locations: true,
+  attachComment: true,
   tokens: true,
-  comment: true,
-  jsx: true
+  ecmaVersion: 8,
+  sourceType: 'module',
+  plugins: {
+    jsx: true,
+    objectRestSpread: true
+  }
 };
 
-module.exports = function(str) {
+module.exports = function(str, resolvedPath) {
   let parsed;
+  const comments = [],
+    tokens = [];
 
   try {
-    parsed = esprima.parseModule(str, settings);
+    parsed = acorn.parse(str, {
+      ...acornSettings,
+      sourceType: 'script',
+      onComment: comments,
+      onToken: tokens
+    });
+    parsed.comments = comments;
+    parsed.tokens = tokens;
   } catch (e) {
     try {
-      parsed = esprima.parseScript(str, settings);
+      parsed = acorn.parse(str, {
+        ...acornSettings,
+        onComment: comments,
+        onToken: tokens
+      });
+      parsed.comments = comments;
+      parsed.tokens = tokens;
     } catch (e) {
-      console.log(e.message);
       parsed = {};
     }
   }
