@@ -1,6 +1,7 @@
 # ecmascript-module-react
 
-A native Ecmascript implementation of the development version of React
+A test to see how far current browsers support the untranspiled source of React.
+A native Ecmascript implementation of the development version of React.
 
 The goal is to have an automated process which takes the source from the original react repo and transforms it into native Ecmascript modules to be used in a browser.
 
